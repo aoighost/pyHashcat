@@ -5,7 +5,7 @@
 // 
 
 #include <Python.h>
-#include <bytesobject.h>
+#include bytesobject.h>
 #include <assert.h>
 #include <pthread.h>
 
@@ -481,8 +481,8 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 2;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
-    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
+    hc_argv[0] = PyString_AsString (self->hash);
+    hc_argv[1] = PyString_AsString (self->dict1);
     hc_argv[2] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -491,7 +491,7 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     for (int i = 0; i < PyList_Size (self->rp_files); i++)
     {
 
-      self->user_options->rp_files[i] = PyUnicode_AS_UNICODE (PyList_GetItem (self->rp_files, i));
+      self->user_options->rp_files[i] = PyString_AsString (PyList_GetItem (self->rp_files, i));
     }
 
     break;
@@ -510,9 +510,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
-    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
-    hc_argv[2] = PyUnicode_AS_UNICODE (self->dict2);
+    hc_argv[0] = PyString_AsString (self->hash);
+    hc_argv[1] = PyString_AsString (self->dict1);
+    hc_argv[2] = PyString_AsString (self->dict2);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -533,8 +533,8 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 2;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
-    hc_argv[1] = PyUnicode_AS_UNICODE (self->mask);
+    hc_argv[0] = PyString_AsString (self->hash);
+    hc_argv[1] = PyString_AsString (self->mask);
     hc_argv[2] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -563,9 +563,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
-    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
-    hc_argv[2] = PyUnicode_AS_UNICODE (self->mask);
+    hc_argv[0] = PyString_AsString (self->hash);
+    hc_argv[1] = PyString_AsString (self->dict1);
+    hc_argv[2] = PyString_AsString (self->mask);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -594,9 +594,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
-    hc_argv[1] = PyUnicode_AS_UNICODE (self->mask);
-    hc_argv[2] = PyUnicode_AS_UNICODE (self->dict1);
+    hc_argv[0] = PyString_AsString (self->hash);
+    hc_argv[1] = PyString_AsString (self->mask);
+    hc_argv[2] = PyString_AsString (self->dict1);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -2103,7 +2103,7 @@ static int hashcat_setcpu_affinity (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->cpu_affinity = PyUnicode_AS_UNICODE (value);
+  self->user_options->cpu_affinity = PyString_AsString (value);
 
   return 0;
 
@@ -2145,7 +2145,7 @@ static int hashcat_setcustom_charset_1 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_1 = PyUnicode_AS_UNICODE (value);
+  self->user_options->custom_charset_1 = PyString_AsString (value);
 
   return 0;
 
@@ -2187,7 +2187,7 @@ static int hashcat_setcustom_charset_2 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_2 = PyUnicode_AS_UNICODE (value);
+  self->user_options->custom_charset_2 = PyString_AsString (value);
 
   return 0;
 
@@ -2229,7 +2229,7 @@ static int hashcat_setcustom_charset_3 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_3 = PyUnicode_AS_UNICODE (value);
+  self->user_options->custom_charset_3 = PyString_AsString (value);
 
   return 0;
 
@@ -2271,7 +2271,7 @@ static int hashcat_setcustom_charset_4 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_4 = PyUnicode_AS_UNICODE (value);
+  self->user_options->custom_charset_4 = PyString_AsString (value);
 
   return 0;
 
@@ -2313,7 +2313,7 @@ static int hashcat_setdebug_file (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->debug_file = PyUnicode_AS_UNICODE (value);
+  self->user_options->debug_file = PyString_AsString (value);
 
   return 0;
 
@@ -2884,7 +2884,7 @@ static int hashcat_setinduction_dir (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->induction_dir = PyUnicode_AS_UNICODE (value);
+  self->user_options->induction_dir = PyString_AsString (value);
 
   return 0;
 
@@ -3442,7 +3442,7 @@ static int hashcat_setmarkov_hcstat (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->markov_hcstat = PyUnicode_AS_UNICODE (value);
+  self->user_options->markov_hcstat = PyString_AsString (value);
 
   return 0;
 
@@ -3560,7 +3560,7 @@ static int hashcat_setopencl_device_types (hashcatObject * self, PyObject * valu
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_device_types = PyUnicode_AS_UNICODE (value);
+  self->user_options->opencl_device_types = PyString_AsString (value);
 
   return 0;
 
@@ -3602,7 +3602,7 @@ static int hashcat_setopencl_devices (hashcatObject * self, PyObject * value, vo
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_devices = PyUnicode_AS_UNICODE (value);
+  self->user_options->opencl_devices = PyString_AsString (value);
 
   return 0;
 
@@ -3694,7 +3694,7 @@ static int hashcat_setopencl_platforms (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_platforms = PyUnicode_AS_UNICODE (value);
+  self->user_options->opencl_platforms = PyString_AsString (value);
 
   return 0;
 
@@ -3772,7 +3772,7 @@ static int hashcat_setoutfile (hashcatObject * self, PyObject * value, void *clo
   }
 
   Py_INCREF (value);
-  self->user_options->outfile = PyUnicode_AS_UNICODE (value);
+  self->user_options->outfile = PyString_AsString (value);
 
   return 0;
 
@@ -3865,7 +3865,7 @@ static int hashcat_setoutfile_check_dir (hashcatObject * self, PyObject * value,
   }
 
   Py_INCREF (value);
-  self->user_options->outfile_check_dir = PyUnicode_AS_UNICODE (value);
+  self->user_options->outfile_check_dir = PyString_AsString (value);
 
   return 0;
 
@@ -4045,7 +4045,7 @@ static int hashcat_setpotfile_path (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->potfile_path = PyUnicode_AS_UNICODE (value);
+  self->user_options->potfile_path = PyString_AsString (value);
 
   return 0;
 
@@ -4374,7 +4374,7 @@ static int hashcat_setrestore_file_path (hashcatObject * self, PyObject * value,
   }
 
   Py_INCREF (value);
-  self->user_options->restore_file_path = PyUnicode_AS_UNICODE (value);
+  self->user_options->restore_file_path = PyString_AsString (value);
 
   return 0;
 
@@ -4599,7 +4599,7 @@ static int hashcat_setrule_buf_l (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->rule_buf_l = PyUnicode_AS_UNICODE (value);
+  self->user_options->rule_buf_l = PyString_AsString (value);
 
   return 0;
 
@@ -4641,7 +4641,7 @@ static int hashcat_setrule_buf_r (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->rule_buf_r = PyUnicode_AS_UNICODE (value);
+  self->user_options->rule_buf_r = PyString_AsString (value);
 
   return 0;
 
@@ -4786,7 +4786,7 @@ static int hashcat_setseparator (hashcatObject * self, PyObject * value, void *c
 
   char sep;
 
-  sep = (PyUnicode_AS_UNICODE (value))[0];
+  sep = (PyString_AsString (value))[0];
   self->user_options->separator = (char) sep;
 
   return 0;
@@ -4829,7 +4829,7 @@ static int hashcat_setsession (hashcatObject * self, PyObject * value, void *clo
   }
 
   Py_INCREF (value);
-  self->user_options->session = PyUnicode_AS_UNICODE (value);
+  self->user_options->session = PyString_AsString (value);
 
   return 0;
 
@@ -5058,7 +5058,7 @@ static int hashcat_settruecrypt_keyfiles (hashcatObject * self, PyObject * value
   }
 
   Py_INCREF (value);
-  self->user_options->truecrypt_keyfiles = PyUnicode_AS_UNICODE (value);
+  self->user_options->truecrypt_keyfiles = PyString_AsString (value);
 
   return 0;
 
@@ -5151,7 +5151,7 @@ static int hashcat_setveracrypt_keyfiles (hashcatObject * self, PyObject * value
   }
 
   Py_INCREF (value);
-  self->user_options->veracrypt_keyfiles = PyUnicode_AS_UNICODE (value);
+  self->user_options->veracrypt_keyfiles = PyString_AsString (value);
 
   return 0;
 
