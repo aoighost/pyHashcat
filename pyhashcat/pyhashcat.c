@@ -5,6 +5,7 @@
 // 
 
 #include <Python.h>
+#include <bytesobject.h>
 #include <assert.h>
 #include <pthread.h>
 
@@ -480,8 +481,8 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 2;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyString_AsString (self->hash);
-    hc_argv[1] = PyString_AsString (self->dict1);
+    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
+    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
     hc_argv[2] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -490,7 +491,7 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     for (int i = 0; i < PyList_Size (self->rp_files); i++)
     {
 
-      self->user_options->rp_files[i] = PyString_AsString (PyList_GetItem (self->rp_files, i));
+      self->user_options->rp_files[i] = PyUnicode_AS_UNICODE (PyList_GetItem (self->rp_files, i));
     }
 
     break;
@@ -509,9 +510,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyString_AsString (self->hash);
-    hc_argv[1] = PyString_AsString (self->dict1);
-    hc_argv[2] = PyString_AsString (self->dict2);
+    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
+    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
+    hc_argv[2] = PyUnicode_AS_UNICODE (self->dict2);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -532,8 +533,8 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 2;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyString_AsString (self->hash);
-    hc_argv[1] = PyString_AsString (self->mask);
+    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
+    hc_argv[1] = PyUnicode_AS_UNICODE (self->mask);
     hc_argv[2] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -562,9 +563,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyString_AsString (self->hash);
-    hc_argv[1] = PyString_AsString (self->dict1);
-    hc_argv[2] = PyString_AsString (self->mask);
+    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
+    hc_argv[1] = PyUnicode_AS_UNICODE (self->dict1);
+    hc_argv[2] = PyUnicode_AS_UNICODE (self->mask);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -593,9 +594,9 @@ static PyObject *hashcat_hashcat_session_execute (hashcatObject * self, PyObject
     self->hc_argc = 3;
     hc_argv_size = self->hc_argc + 1;
     hc_argv = (char **) realloc (hc_argv, sizeof (char *) * (hc_argv_size));
-    hc_argv[0] = PyString_AsString (self->hash);
-    hc_argv[1] = PyString_AsString (self->mask);
-    hc_argv[2] = PyString_AsString (self->dict1);
+    hc_argv[0] = PyUnicode_AS_UNICODE (self->hash);
+    hc_argv[1] = PyUnicode_AS_UNICODE (self->mask);
+    hc_argv[2] = PyUnicode_AS_UNICODE (self->dict1);
     hc_argv[3] = NULL;
     self->user_options->hc_argc = self->hc_argc;
     self->user_options->hc_argv = hc_argv;
@@ -1929,7 +1930,7 @@ static int hashcat_setattack_mode (hashcatObject * self, PyObject * value, void 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The attack_mode attribute value must be a int");
@@ -1937,7 +1938,7 @@ static int hashcat_setattack_mode (hashcatObject * self, PyObject * value, void 
   }
 
   Py_INCREF (value);
-  self->user_options->attack_mode = PyInt_AsLong (value);
+  self->user_options->attack_mode = PyLong_AsLong (value);
 
   return 0;
 
@@ -2016,7 +2017,7 @@ static int hashcat_setbitmap_max (hashcatObject * self, PyObject * value, void *
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The bitmap_max attribute value must be a int");
@@ -2024,7 +2025,7 @@ static int hashcat_setbitmap_max (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->bitmap_max = PyInt_AsLong (value);
+  self->user_options->bitmap_max = PyLong_AsLong (value);
 
   return 0;
 
@@ -2052,7 +2053,7 @@ static int hashcat_setbitmap_min (hashcatObject * self, PyObject * value, void *
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The bitmap_min attribute value must be a int");
@@ -2060,7 +2061,7 @@ static int hashcat_setbitmap_min (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->bitmap_min = PyInt_AsLong (value);
+  self->user_options->bitmap_min = PyLong_AsLong (value);
 
   return 0;
 
@@ -2102,7 +2103,7 @@ static int hashcat_setcpu_affinity (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->cpu_affinity = PyString_AsString (value);
+  self->user_options->cpu_affinity = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2144,7 +2145,7 @@ static int hashcat_setcustom_charset_1 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_1 = PyString_AsString (value);
+  self->user_options->custom_charset_1 = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2186,7 +2187,7 @@ static int hashcat_setcustom_charset_2 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_2 = PyString_AsString (value);
+  self->user_options->custom_charset_2 = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2228,7 +2229,7 @@ static int hashcat_setcustom_charset_3 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_3 = PyString_AsString (value);
+  self->user_options->custom_charset_3 = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2270,7 +2271,7 @@ static int hashcat_setcustom_charset_4 (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->custom_charset_4 = PyString_AsString (value);
+  self->user_options->custom_charset_4 = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2312,7 +2313,7 @@ static int hashcat_setdebug_file (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->debug_file = PyString_AsString (value);
+  self->user_options->debug_file = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2345,7 +2346,7 @@ static int hashcat_setdebug_mode (hashcatObject * self, PyObject * value, void *
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The debug_mode attribute value must be a int");
@@ -2353,7 +2354,7 @@ static int hashcat_setdebug_mode (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->debug_mode = PyInt_AsLong (value);
+  self->user_options->debug_mode = PyLong_AsLong (value);
 
   return 0;
 
@@ -2433,7 +2434,7 @@ static int hashcat_setgpu_temp_abort (hashcatObject * self, PyObject * value, vo
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The gpu_temp_abort attribute value must be a int");
@@ -2441,7 +2442,7 @@ static int hashcat_setgpu_temp_abort (hashcatObject * self, PyObject * value, vo
   }
 
   Py_INCREF (value);
-  self->user_options->gpu_temp_abort = PyInt_AsLong (value);
+  self->user_options->gpu_temp_abort = PyLong_AsLong (value);
 
   return 0;
 
@@ -2520,7 +2521,7 @@ static int hashcat_setgpu_temp_retain (hashcatObject * self, PyObject * value, v
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The gpu_temp_retain attribute value must be a int");
@@ -2528,7 +2529,7 @@ static int hashcat_setgpu_temp_retain (hashcatObject * self, PyObject * value, v
   }
 
   Py_INCREF (value);
-  self->user_options->gpu_temp_retain = PyInt_AsLong (value);
+  self->user_options->gpu_temp_retain = PyLong_AsLong (value);
 
   return 0;
 
@@ -2557,7 +2558,7 @@ static int hashcat_sethash_mode (hashcatObject * self, PyObject * value, void *c
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The hash_mode attribute value must be a int");
@@ -2565,7 +2566,7 @@ static int hashcat_sethash_mode (hashcatObject * self, PyObject * value, void *c
   }
 
   Py_INCREF (value);
-  self->user_options->hash_mode = PyInt_AsLong (value);
+  self->user_options->hash_mode = PyLong_AsLong (value);
 
   return 0;
 
@@ -2797,7 +2798,7 @@ static int hashcat_setincrement_max (hashcatObject * self, PyObject * value, voi
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The increment_max attribute value must be a int");
@@ -2805,7 +2806,7 @@ static int hashcat_setincrement_max (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->increment_max = PyInt_AsLong (value);
+  self->user_options->increment_max = PyLong_AsLong (value);
 
   return 0;
 
@@ -2833,7 +2834,7 @@ static int hashcat_setincrement_min (hashcatObject * self, PyObject * value, voi
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The increment_min attribute value must be a int");
@@ -2841,7 +2842,7 @@ static int hashcat_setincrement_min (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->increment_min = PyInt_AsLong (value);
+  self->user_options->increment_min = PyLong_AsLong (value);
 
   return 0;
 
@@ -2883,7 +2884,7 @@ static int hashcat_setinduction_dir (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->induction_dir = PyString_AsString (value);
+  self->user_options->induction_dir = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -2962,7 +2963,7 @@ static int hashcat_setkernel_accel (hashcatObject * self, PyObject * value, void
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The kernel_accel attribute value must be a int");
@@ -2970,7 +2971,7 @@ static int hashcat_setkernel_accel (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->kernel_accel = PyInt_AsLong (value);
+  self->user_options->kernel_accel = PyLong_AsLong (value);
 
   return 0;
 
@@ -2999,7 +3000,7 @@ static int hashcat_setkernel_loops (hashcatObject * self, PyObject * value, void
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The kernel_loops attribute value must be a int");
@@ -3007,7 +3008,7 @@ static int hashcat_setkernel_loops (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->kernel_loops = PyInt_AsLong (value);
+  self->user_options->kernel_loops = PyLong_AsLong (value);
 
   return 0;
 
@@ -3137,7 +3138,7 @@ static int hashcat_setlimit (hashcatObject * self, PyObject * value, void *closu
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The limit attribute value must be a int");
@@ -3145,7 +3146,7 @@ static int hashcat_setlimit (hashcatObject * self, PyObject * value, void *closu
   }
 
   Py_INCREF (value);
-  self->user_options->limit = PyInt_AsLong (value);
+  self->user_options->limit = PyLong_AsLong (value);
 
   return 0;
 
@@ -3441,7 +3442,7 @@ static int hashcat_setmarkov_hcstat (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->markov_hcstat = PyString_AsString (value);
+  self->user_options->markov_hcstat = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3469,7 +3470,7 @@ static int hashcat_setmarkov_threshold (hashcatObject * self, PyObject * value, 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The markov_threshold attribute value must be a int");
@@ -3477,7 +3478,7 @@ static int hashcat_setmarkov_threshold (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->markov_threshold = PyInt_AsLong (value);
+  self->user_options->markov_threshold = PyLong_AsLong (value);
 
   return 0;
 
@@ -3505,7 +3506,7 @@ static int hashcat_setnvidia_spin_damp (hashcatObject * self, PyObject * value, 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The nvidia_spin_damp attribute value must be a int");
@@ -3513,7 +3514,7 @@ static int hashcat_setnvidia_spin_damp (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->nvidia_spin_damp = PyInt_AsLong (value);
+  self->user_options->nvidia_spin_damp = PyLong_AsLong (value);
 
   return 0;
 
@@ -3559,7 +3560,7 @@ static int hashcat_setopencl_device_types (hashcatObject * self, PyObject * valu
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_device_types = PyString_AsString (value);
+  self->user_options->opencl_device_types = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3601,7 +3602,7 @@ static int hashcat_setopencl_devices (hashcatObject * self, PyObject * value, vo
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_devices = PyString_AsString (value);
+  self->user_options->opencl_devices = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3693,7 +3694,7 @@ static int hashcat_setopencl_platforms (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_platforms = PyString_AsString (value);
+  self->user_options->opencl_platforms = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3721,7 +3722,7 @@ static int hashcat_setopencl_vector_width (hashcatObject * self, PyObject * valu
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The opencl_vector_width attribute value must be a int");
@@ -3729,7 +3730,7 @@ static int hashcat_setopencl_vector_width (hashcatObject * self, PyObject * valu
   }
 
   Py_INCREF (value);
-  self->user_options->opencl_vector_width = PyInt_AsLong (value);
+  self->user_options->opencl_vector_width = PyLong_AsLong (value);
 
   return 0;
 
@@ -3771,7 +3772,7 @@ static int hashcat_setoutfile (hashcatObject * self, PyObject * value, void *clo
   }
 
   Py_INCREF (value);
-  self->user_options->outfile = PyString_AsString (value);
+  self->user_options->outfile = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3864,7 +3865,7 @@ static int hashcat_setoutfile_check_dir (hashcatObject * self, PyObject * value,
   }
 
   Py_INCREF (value);
-  self->user_options->outfile_check_dir = PyString_AsString (value);
+  self->user_options->outfile_check_dir = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -3892,7 +3893,7 @@ static int hashcat_setoutfile_check_timer (hashcatObject * self, PyObject * valu
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The outfile_check_timer attribute value must be a int");
@@ -3900,7 +3901,7 @@ static int hashcat_setoutfile_check_timer (hashcatObject * self, PyObject * valu
   }
 
   Py_INCREF (value);
-  self->user_options->outfile_check_timer = PyInt_AsLong (value);
+  self->user_options->outfile_check_timer = PyLong_AsLong (value);
 
   return 0;
 
@@ -3944,7 +3945,7 @@ static int hashcat_setoutfile_format (hashcatObject * self, PyObject * value, vo
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The outfile_format attribute value must be a int");
@@ -3952,7 +3953,7 @@ static int hashcat_setoutfile_format (hashcatObject * self, PyObject * value, vo
   }
 
   Py_INCREF (value);
-  self->user_options->outfile_format = PyInt_AsLong (value);
+  self->user_options->outfile_format = PyLong_AsLong (value);
 
   return 0;
 
@@ -4044,7 +4045,7 @@ static int hashcat_setpotfile_path (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->potfile_path = PyString_AsString (value);
+  self->user_options->potfile_path = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -4223,7 +4224,7 @@ static int hashcat_setremove_timer (hashcatObject * self, PyObject * value, void
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The remove_timer attribute value must be a int");
@@ -4231,7 +4232,7 @@ static int hashcat_setremove_timer (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->remove_timer = PyInt_AsLong (value);
+  self->user_options->remove_timer = PyLong_AsLong (value);
 
   return 0;
 
@@ -4373,7 +4374,7 @@ static int hashcat_setrestore_file_path (hashcatObject * self, PyObject * value,
   }
 
   Py_INCREF (value);
-  self->user_options->restore_file_path = PyString_AsString (value);
+  self->user_options->restore_file_path = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -4403,7 +4404,7 @@ static int hashcat_setrestore_timer (hashcatObject * self, PyObject * value, voi
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The restore_timer attribute value must be a int");
@@ -4411,7 +4412,7 @@ static int hashcat_setrestore_timer (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->restore_timer = PyInt_AsLong (value);
+  self->user_options->restore_timer = PyLong_AsLong (value);
 
   return 0;
 
@@ -4440,7 +4441,7 @@ static int hashcat_setrp_gen (hashcatObject * self, PyObject * value, void *clos
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The rp_gen attribute value must be a int");
@@ -4448,7 +4449,7 @@ static int hashcat_setrp_gen (hashcatObject * self, PyObject * value, void *clos
   }
 
   Py_INCREF (value);
-  self->user_options->rp_gen = PyInt_AsLong (value);
+  self->user_options->rp_gen = PyLong_AsLong (value);
 
   return 0;
 
@@ -4476,7 +4477,7 @@ static int hashcat_setrp_gen_func_max (hashcatObject * self, PyObject * value, v
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The rp_gen_func_max attribute value must be a int");
@@ -4484,7 +4485,7 @@ static int hashcat_setrp_gen_func_max (hashcatObject * self, PyObject * value, v
   }
 
   Py_INCREF (value);
-  self->user_options->rp_gen_func_max = PyInt_AsLong (value);
+  self->user_options->rp_gen_func_max = PyLong_AsLong (value);
 
   return 0;
 
@@ -4512,7 +4513,7 @@ static int hashcat_setrp_gen_func_min (hashcatObject * self, PyObject * value, v
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The rp_gen_func_min attribute value must be a int");
@@ -4520,7 +4521,7 @@ static int hashcat_setrp_gen_func_min (hashcatObject * self, PyObject * value, v
   }
 
   Py_INCREF (value);
-  self->user_options->rp_gen_func_min = PyInt_AsLong (value);
+  self->user_options->rp_gen_func_min = PyLong_AsLong (value);
 
   return 0;
 
@@ -4548,7 +4549,7 @@ static int hashcat_setrp_gen_seed (hashcatObject * self, PyObject * value, void 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The rp_gen_seed attribute value must be a int");
@@ -4556,7 +4557,7 @@ static int hashcat_setrp_gen_seed (hashcatObject * self, PyObject * value, void 
   }
 
   Py_INCREF (value);
-  self->user_options->rp_gen_seed = PyInt_AsLong (value);
+  self->user_options->rp_gen_seed = PyLong_AsLong (value);
 
   return 0;
 
@@ -4598,7 +4599,7 @@ static int hashcat_setrule_buf_l (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->rule_buf_l = PyString_AsString (value);
+  self->user_options->rule_buf_l = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -4640,7 +4641,7 @@ static int hashcat_setrule_buf_r (hashcatObject * self, PyObject * value, void *
   }
 
   Py_INCREF (value);
-  self->user_options->rule_buf_r = PyString_AsString (value);
+  self->user_options->rule_buf_r = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -4668,7 +4669,7 @@ static int hashcat_setruntime (hashcatObject * self, PyObject * value, void *clo
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The runtime attribute value must be a int");
@@ -4676,7 +4677,7 @@ static int hashcat_setruntime (hashcatObject * self, PyObject * value, void *clo
   }
 
   Py_INCREF (value);
-  self->user_options->runtime = PyInt_AsLong (value);
+  self->user_options->runtime = PyLong_AsLong (value);
 
   return 0;
 
@@ -4704,7 +4705,7 @@ static int hashcat_setscrypt_tmto (hashcatObject * self, PyObject * value, void 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The scrypt_tmto attribute value must be a int");
@@ -4712,7 +4713,7 @@ static int hashcat_setscrypt_tmto (hashcatObject * self, PyObject * value, void 
   }
 
   Py_INCREF (value);
-  self->user_options->scrypt_tmto = PyInt_AsLong (value);
+  self->user_options->scrypt_tmto = PyLong_AsLong (value);
 
   return 0;
 
@@ -4740,7 +4741,7 @@ static int hashcat_setsegment_size (hashcatObject * self, PyObject * value, void
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The segment_size attribute value must be a int");
@@ -4748,7 +4749,7 @@ static int hashcat_setsegment_size (hashcatObject * self, PyObject * value, void
   }
 
   Py_INCREF (value);
-  self->user_options->segment_size = PyInt_AsLong (value);
+  self->user_options->segment_size = PyLong_AsLong (value);
 
   return 0;
 
@@ -4785,7 +4786,7 @@ static int hashcat_setseparator (hashcatObject * self, PyObject * value, void *c
 
   char sep;
 
-  sep = (PyString_AsString (value))[0];
+  sep = (PyUnicode_AS_UNICODE (value))[0];
   self->user_options->separator = (char) sep;
 
   return 0;
@@ -4828,7 +4829,7 @@ static int hashcat_setsession (hashcatObject * self, PyObject * value, void *clo
   }
 
   Py_INCREF (value);
-  self->user_options->session = PyString_AsString (value);
+  self->user_options->session = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -4906,7 +4907,7 @@ static int hashcat_setskip (hashcatObject * self, PyObject * value, void *closur
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The skip attribute value must be a int");
@@ -4914,7 +4915,7 @@ static int hashcat_setskip (hashcatObject * self, PyObject * value, void *closur
   }
 
   Py_INCREF (value);
-  self->user_options->skip = PyInt_AsLong (value);
+  self->user_options->skip = PyLong_AsLong (value);
 
   return 0;
 
@@ -5057,7 +5058,7 @@ static int hashcat_settruecrypt_keyfiles (hashcatObject * self, PyObject * value
   }
 
   Py_INCREF (value);
-  self->user_options->truecrypt_keyfiles = PyString_AsString (value);
+  self->user_options->truecrypt_keyfiles = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -5150,7 +5151,7 @@ static int hashcat_setveracrypt_keyfiles (hashcatObject * self, PyObject * value
   }
 
   Py_INCREF (value);
-  self->user_options->veracrypt_keyfiles = PyString_AsString (value);
+  self->user_options->veracrypt_keyfiles = PyUnicode_AS_UNICODE (value);
 
   return 0;
 
@@ -5178,7 +5179,7 @@ static int hashcat_setveracrypt_pim (hashcatObject * self, PyObject * value, voi
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The veracrypt_pim attribute value must be a int");
@@ -5186,7 +5187,7 @@ static int hashcat_setveracrypt_pim (hashcatObject * self, PyObject * value, voi
   }
 
   Py_INCREF (value);
-  self->user_options->veracrypt_pim = PyInt_AsLong (value);
+  self->user_options->veracrypt_pim = PyLong_AsLong (value);
 
   return 0;
 
@@ -5214,7 +5215,7 @@ static int hashcat_setweak_hash_threshold (hashcatObject * self, PyObject * valu
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The weak_hash_threshold attribute value must be a int");
@@ -5222,7 +5223,7 @@ static int hashcat_setweak_hash_threshold (hashcatObject * self, PyObject * valu
   }
 
   Py_INCREF (value);
-  self->user_options->weak_hash_threshold = PyInt_AsLong (value);
+  self->user_options->weak_hash_threshold = PyLong_AsLong (value);
 
   return 0;
 
@@ -5257,7 +5258,7 @@ static int hashcat_setworkload_profile (hashcatObject * self, PyObject * value, 
     return -1;
   }
 
-  if (!PyInt_Check (value))
+  if (!PyLong_Check (value))
   {
 
     PyErr_SetString (PyExc_TypeError, "The workload_profile attribute value must be a int");
@@ -5265,7 +5266,7 @@ static int hashcat_setworkload_profile (hashcatObject * self, PyObject * value, 
   }
 
   Py_INCREF (value);
-  self->user_options->workload_profile = PyInt_AsLong (value);
+  self->user_options->workload_profile = PyLong_AsLong (value);
 
   return 0;
 
